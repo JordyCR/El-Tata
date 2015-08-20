@@ -1,0 +1,37 @@
+* Desde el servidor web, aplicación, página u otro cliente, se puede solicitar a
+  GCM el envío de una notificación push:
+    - Se hace mediante HTML o XMPP
+    - Se utiliza en método POST
+    - El servidor de GCM es: https://android.googleapis.com/gcm/send
+    - En cada Header debe de ir los siguientes parámetros (SIEMPRE):
+        Content-Type:       application/json
+        Authorization:      key=<ApiKey/Clave del Servidor en GCM>  (Ej. AIzaSyCH7B7qMMbLnQdj6WG1yuvPp3SlsLHtBds)
+
+    - El body al hacer el envío es obligatorio, al igual que su parámetro "data" y "registration_ids".
+      Este es un ejemplo:
+
+        {
+          "data": {
+            "fecha": "19/Ago/15",
+            "doctor": "Max Cantorán Aguirre",
+            "paciente": "Ismael Castillo",
+            "comentarios": "Desafortunadamente el paciente se encuentra en estado terminal"
+          },
+          "registration_ids": [
+            "APA91bHDXfzISMoo6OfqhhODnU7TeNzqCxeE7lYZHhdI801wazh1e7vbITZVTqwKU5avNW0myInlZW3Aat3S8gzqawN9G5fQEkMVNvqkDHRRYt1IDsFrPuc"
+          ]
+        }
+
+    - En el parámetro "registration_ids" son todas las llaves de los dispositivos registrados a
+      los que se les quiere enviar este mensaje.
+    - Por lo anterior sabemos que si queremos enviar un mensaje a uno o más usuarios,
+      debemos (es aconsejable) guardar en una DB los usuarios con sus "registration_ids" y
+      enviar las notificaciones push con base a los resultados de la consulta en la DB
+
+
+* Todos los parámetro pasados en "data" del objeto JSON serán accedidos desde los "extras"
+  del intent conseguido y se accederá a ellos por hashing
+
+* Para fines prácticos de no tener que estar programando ni definiendo un servidor utilicé
+  un Cliente REST como complemento/extensión (El mismo con el que accedí a toda la información
+  sensible de la BUAP  XD!!!)
