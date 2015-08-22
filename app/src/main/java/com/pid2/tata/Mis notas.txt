@@ -35,3 +35,9 @@
 * Para fines prácticos de no tener que estar programando ni definiendo un servidor utilicé
   un Cliente REST como complemento/extensión (El mismo con el que accedí a toda la información
   sensible de la BUAP  XD!!!)
+
+
+
+* Algunos links:
+
+    http://hmkcode.github.io/images/2014/03/android-gcm-arch.jpg

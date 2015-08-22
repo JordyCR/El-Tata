@@ -101,19 +101,24 @@ public class GcmMessageHandler extends IntentService {
 		// Intervenimos en el UI
 		handler.post(new Runnable() {
 			public void run() {
+
+				String text = "El paciente " + extras.getString("paciente") +	", tiene un nuevo reporte del médico " + extras.getString("doctor");
+				NotificationCompat.BigTextStyle textStyle = new NotificationCompat.BigTextStyle().bigText(text);
+
 				NotificationCompat.Builder
 						mBuilder = new NotificationCompat.Builder(getApplicationContext())
-								.setSmallIcon(R.drawable.ic_medico)
-								.setLargeIcon((((BitmapDrawable)getResources().getDrawable(R.drawable.ic_medico)).getBitmap()))
+								.setSmallIcon(R.drawable.ic_mini_doctor)
+								.setLargeIcon((((BitmapDrawable) getResources().getDrawable(R.mipmap.ic_launcher)).getBitmap()))
 								// TODO: Cambiar estos 2 despues
 								.setContentTitle("Nuevo Reporte Médico.")
 								.setContentText("El paciente " + extras.getString("paciente") +
 										", tiene un nuevo reporte del médico " + extras.getString("doctor"))
 								//.setContentInfo("4")
+								.setStyle(textStyle)
 								.setAutoCancel(true)
 								.setDefaults(Notification.DEFAULT_ALL)
-								.setPriority(NotificationCompat.PRIORITY_HIGH)
-								.setTicker("Alerta!");
+								//.setPriority(NotificationCompat.PRIORITY_HIGH)
+								.setTicker("Nuevo Reporte Médico.");
 
 				Intent intent = new Intent(getApplicationContext(), MainActivity.class);
 

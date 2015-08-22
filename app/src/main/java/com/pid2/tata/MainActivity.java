@@ -56,7 +56,6 @@ public class MainActivity extends Activity implements OnClickListener {
 
 				} catch (IOException ex) {
 					msg = "Error :" + ex.getMessage();
-
 				}
 				return msg;
 			}
