@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.pid2.tata.MainActivity;
 import com.pid2.tata.R;
+import com.pid2.tata.ui.DetallesReporteActivity;
 
 /**
  * Created by JordyCuan on 19/08/15.
@@ -117,16 +118,18 @@ public class GcmMessageHandler extends IntentService {
 								.setStyle(textStyle)
 								.setAutoCancel(true)
 								.setDefaults(Notification.DEFAULT_ALL)
-								//.setPriority(NotificationCompat.PRIORITY_HIGH)
+								.setPriority(NotificationCompat.PRIORITY_HIGH)
 								.setTicker("Nuevo Reporte Médico.");
 
-				Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+
+
+				Intent intent = new Intent(getApplicationContext(), DetallesReporteActivity.class);
 
 				// Como no empleamos (por ahora) los extras, los mandamos a la otra actividad
 				// para su manipulación
 				intent.putExtras(extras);
-
-				PendingIntent contIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, 0);
+																										// Con esto, hacemos que el intent sea el MISMO
+				PendingIntent contIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
 				mBuilder.setContentIntent(contIntent);
 
