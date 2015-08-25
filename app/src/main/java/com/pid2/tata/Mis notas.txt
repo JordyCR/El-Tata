@@ -1,21 +1,24 @@
 * Desde el servidor web, aplicación, página u otro cliente, se puede solicitar a
   GCM el envío de una notificación push:
-    - Se hace mediante HTML o XMPP
-    - Se utiliza en método POST
-    - El servidor de GCM es: https://android.googleapis.com/gcm/send
-    - En cada Header debe de ir los siguientes parámetros (SIEMPRE):
+    - Se hace mediante HTML o XMPP (nosotros usaremos HTTP)
+    - Se utiliza el método POST
+    - El servidor de GCM es: 
+        https://android.googleapis.com/gcm/send       // Acá se manda el request
+    - En cada Header del request deben de ir los siguientes parámetros (SIEMPRE):
+        KEY                 VALUE
         Content-Type:       application/json
         Authorization:      key=<ApiKey/Clave del Servidor en GCM>  (Ej. AIzaSyCH7B7qMMbLnQdj6WG1yuvPp3SlsLHtBds)
 
-    - El body al hacer el envío es obligatorio, al igual que su parámetro "data" y "registration_ids".
+    - El body es obligatorio al hacer el envío, al igual que su parámetro "data" y "registration_ids".
       Este es un ejemplo:
 
         {
           "data": {
             "fecha": "19/Ago/15",
             "doctor": "Max Cantorán Aguirre",
-            "paciente": "Ismael Castillo",
-            "comentarios": "Desafortunadamente el paciente se encuentra en estado terminal"
+            "paciente": "Lucho Martinez",
+            "observaciones": "Desafortunadamente el paciente se encuentra en estado terminal",
+            "sugerencias": "Busque descuentos en funerarias"
           },
           "registration_ids": [
             "APA91bHDXfzISMoo6OfqhhODnU7TeNzqCxeE7lYZHhdI801wazh1e7vbITZVTqwKU5avNW0myInlZW3Aat3S8gzqawN9G5fQEkMVNvqkDHRRYt1IDsFrPuc"
@@ -30,11 +33,11 @@
 
 
 * Todos los parámetro pasados en "data" del objeto JSON serán accedidos desde los "extras"
-  del intent conseguido y se accederá a ellos por hashing
+  del intent conseguido en el BroadcastReceiver y se accederá a ellos por hashing
 
 * Para fines prácticos de no tener que estar programando ni definiendo un servidor utilicé
   un Cliente REST como complemento/extensión (El mismo con el que accedí a toda la información
-  sensible de la BUAP  XD!!!)
+  sensible de las Becas BUAP  XD!!!)
 
 
 
