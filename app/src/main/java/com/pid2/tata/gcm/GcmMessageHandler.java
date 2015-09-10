@@ -10,6 +10,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
@@ -36,7 +37,6 @@ public class GcmMessageHandler extends IntentService {
 
 	@Override
 	protected void onHandleIntent(Intent intent) {
-
 		/**
 		 * El mensaje enviado del servidor es insertado en este intent, viene a modo de
 		 * tabla hash y se recuperan los parametros mediante las llaves definidas por nosotros
@@ -78,7 +78,12 @@ public class GcmMessageHandler extends IntentService {
 		String doctor = extras.getString("doctor");
 		String paciente = extras.getString("paciente");
 		String comentarios = extras.getString("comentarios");
+		String tipo_rep = extras.getString("tipo");
 
+		// Todo: esta sí
+		int id_rep = Integer.valueOf(extras.getString("id"));
+
+		Log.i("*** GCM ***", String.valueOf(id_rep));
 
 //		Set<String> llaves = extras.keySet();
 //		String which = "";
@@ -93,6 +98,14 @@ public class GcmMessageHandler extends IntentService {
 		// meterlo dentro de una DB).
 		mostrarNotificacion(extras);
 //		Log.i("*** GCM ***", "Received : (" + messageType + ")  " + extras.getString("title"));
+
+		//TODO: Enviar acose de recibo al servidor
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				// Envío al servidor
+			}
+		}).start();
 
 		GcmBroadcastReceiver.completeWakefulIntent(intent);
 	}
@@ -111,7 +124,7 @@ public class GcmMessageHandler extends IntentService {
 								.setSmallIcon(R.drawable.ic_mini_doctor)
 								.setLargeIcon((((BitmapDrawable) getResources().getDrawable(R.mipmap.ic_launcher)).getBitmap()))
 								// TODO: Cambiar estos 2 despues
-								.setContentTitle("Nuevo Reporte Médico.")
+								.setContentTitle("Nuevo ReporteModel Médico.")
 								.setContentText("El paciente " + extras.getString("paciente") +
 										", tiene un nuevo reporte del médico " + extras.getString("doctor"))
 								//.setContentInfo("4")
@@ -119,25 +132,31 @@ public class GcmMessageHandler extends IntentService {
 								.setAutoCancel(true)
 								.setDefaults(Notification.DEFAULT_ALL)
 								.setPriority(NotificationCompat.PRIORITY_HIGH)
-								.setTicker("Nuevo Reporte Médico.");
+								.setTicker("Nuevo ReporteModel Médico.");
 
 
 
 				Intent intent = new Intent(getApplicationContext(), DetallesReporteActivity.class);
+				intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
 				// Como no empleamos (por ahora) los extras, los mandamos a la otra actividad
 				// para su manipulación
 				intent.putExtras(extras);
 																										// Con esto, hacemos que el intent sea el MISMO
 				PendingIntent contIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+				// Intent.FLAG_ACTIVITY_NEW_TASK
+				// PendingIntent.FLAG_ONE_SHOT
 
+				// Todo: Talvez necesitemos esto
+				// mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+				// mNotificationManager.cancel(SIMPLE_NOTFICATION_ID_A);
 				mBuilder.setContentIntent(contIntent);
 
 				NotificationManager mNotificationManager =
 						(NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
-				final int NOTIF_ALERTA_ID = 123;  // Identificador único de nuestra notificación
-				mNotificationManager.notify(NOTIF_ALERTA_ID, mBuilder.build());
+				//final int NOTIF_ALERTA_ID = 123;  // Identificador único de nuestra notificación
+				mNotificationManager.notify(Integer.valueOf(extras.getString("id")), mBuilder.build());
 			}
 		});
 	}

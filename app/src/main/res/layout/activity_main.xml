@@ -14,6 +14,21 @@
 	<EditText
 		android:id="@+id/etRegId"
 		android:layout_width="match_parent"
+		android:scrollHorizontally="true"
 		android:layout_height="250dp"/>
+
+	<Button
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="Crear Modelos"
+		android:id="@+id/createModels"
+		android:layout_gravity="center_horizontal"/>
+
+	<Button
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="Mostrar Modelos"
+		android:id="@+id/showModels"
+		android:layout_gravity="center_horizontal"/>
 
 </LinearLayout>

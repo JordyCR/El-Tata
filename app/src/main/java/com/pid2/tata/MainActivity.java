@@ -9,9 +9,18 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.activeandroid.ActiveAndroid;
+import com.activeandroid.query.Select;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.pid2.tata.db.PacienteModel;
+import com.pid2.tata.db.ReporteModel;
 
 import java.io.IOException;
+import java.util.List;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by JordyCuan on 19/08/15.
@@ -24,8 +33,8 @@ import java.io.IOException;
  */
 public class MainActivity extends Activity implements OnClickListener {
 
-	Button btnRegId;
-	EditText etRegId;
+	@Bind(R.id.btnGetRegId) Button btnRegId;
+	@Bind(R.id.etRegId) EditText etRegId;
 	GoogleCloudMessaging gcm;
 	String regid;
 	String PROJECT_NUMBER = "279673819378";
@@ -35,8 +44,8 @@ public class MainActivity extends Activity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		btnRegId = (Button) findViewById(R.id.btnGetRegId);
-		etRegId = (EditText) findViewById(R.id.etRegId);
+		ButterKnife.bind(this);
+		ActiveAndroid.initialize(this);
 
 		btnRegId.setOnClickListener(this);
 	}
@@ -70,5 +79,66 @@ public class MainActivity extends Activity implements OnClickListener {
 	@Override
 	public void onClick(View v) {
 		getRegId();
+	}
+
+	@OnClick(R.id.createModels)
+	public void crearTestModels() {
+		// 6 reportes, 2 pacientes
+		PacienteModel jordy = new PacienteModel("Jordy", "Cuan", "Robledo", 22);
+		PacienteModel dam = new PacienteModel("Damaris", "Jocabed", "Javalois", 24);
+		jordy.save();
+		dam.save();
+
+		new ReporteModel(1, "Hoy", "Nutricion", "Jordy: Hola", jordy).save();
+		new ReporteModel(2, "16 de Marzo", "Musica", "Jordy: Que onda", jordy).save();
+		new ReporteModel(3, "En 1993", "Computación", "Jordy: Aqui, programando", jordy).save();
+
+		new ReporteModel(4, "Mañana", "Nutricion", "Jeje", dam).save();
+		new ReporteModel(5, "31", "Dream", "En el concierto", dam).save();
+		new ReporteModel(6, "19 de Dic", "Viajes", "Voy a Sancris", dam).save();
+	}
+
+
+	@OnClick(R.id.showModels)
+	public void mostrarTestModels() {
+		// Mostrar todos los pacientes
+		// Mostrar todos los reportes
+		// Mostrar todos MIS reportes
+		// Mostrar un determinado paciente
+		// Mostrar un determinado reporte desde el paciente TODO: ???
+		etRegId.setText("");
+		String which = "";
+
+		which += "*PACIENTES* >>>"; {
+		List<PacienteModel> pms = PacienteModel.getAll();
+		for (PacienteModel pac : pms) {
+			which += pac.toString() + "\n";
+		}}
+
+		which += "\n\n*REPORTES* >>>"; {
+		List<ReporteModel> rms = ReporteModel.getAll();
+		for (ReporteModel rep : rms) {
+			which += rep.toString() + "\n";
+		}}
+
+		which += "\n\n*repos de JORDY* >>>"; {
+			PacienteModel jordy = new Select().from(PacienteModel.class).executeSingle();
+			List<ReporteModel> jar = jordy.getAllReportes();
+			for (ReporteModel rep : jar) {
+				which += rep.toString() + "\n";
+		}}
+
+		which += "\n\n*Determinado Paciente* >>>";
+		PacienteModel dam = new Select().from(PacienteModel.class).where("nombre = ?", "Damaris").executeSingle();
+		which += dam.toString();
+
+
+		which += "\n\n*Paciente - Repo* >>>";
+		which += new Select().from(PacienteModel.class)
+				.innerJoin(ReporteModel.class)
+				.on("nombre = ? and tipo = ?", "Damaris", "Nutricion")
+				.executeSingle().toString();
+
+		etRegId.setText(which);
 	}
 }

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<color name="color_geriatrico" >#E09F7D</color>
+	<color name="color_fisiologico">#0575BF</color>
+	<color name="color_psicologico">#BE5DDA</color>
+	<color name="color_nutricional">#57E07E</color>
+</resources>
+
+
+
+

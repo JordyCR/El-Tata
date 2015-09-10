@@ -15,16 +15,10 @@
         {
           "data": {
             "fecha": "19/Ago/15",
-<<<<<<< Updated upstream
             "doctor": "Max Cantorán Aguirre",
             "paciente": "Lucho Martinez",
             "observaciones": "Desafortunadamente el paciente se encuentra en estado terminal",
             "sugerencias": "Busque descuentos en funerarias"
-=======
-            "doctor": "Max Cantorn Aguirre",
-            "paciente": "Ismael Castillo",
-            "comentarios": "Desafortunadamente el paciente se encuentra en estado terminal"
->>>>>>> Stashed changes
           },
           "registration_ids": [
             "APA91bHDXfzISMoo6OfqhhODnU7TeNzqCxeE7lYZHhdI801wazh1e7vbITZVTqwKU5avNW0myInlZW3Aat3S8gzqawN9G5fQEkMVNvqkDHRRYt1IDsFrPuc"
@@ -49,4 +43,21 @@
 
 * Algunos links:
 
+  GCM:
     http://hmkcode.github.io/images/2014/03/android-gcm-arch.jpg
+
+  Notificaciones:
+    http://stackoverflow.com/questions/6224178/how-to-create-multiple-statusbar-notifications-in-android
+    http://developer.android.com/guide/topics/ui/notifiers/notifications.html#Optional
+
+  Abrir otra Activity
+    http://developer.android.com/guide/topics/manifest/activity-element.html
+
+  Bases de Datos
+    DBFlow (buena)
+    ActiveAndroid (buena)
+        JOIN's : https://github.com/pardom/ActiveAndroid/issues/65
+    Sprinkles (bajo rendimiento en guardado)
+
+
+  guides.codepath.com/android
