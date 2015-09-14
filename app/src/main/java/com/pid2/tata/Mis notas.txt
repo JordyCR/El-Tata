@@ -59,5 +59,7 @@
         JOIN's : https://github.com/pardom/ActiveAndroid/issues/65
     Sprinkles (bajo rendimiento en guardado)
 
+  NavigationView y MenuItem's
+    http://stackoverflow.com/questions/31265530/how-can-i-get-menu-item-in-navigationview
 
   guides.codepath.com/android

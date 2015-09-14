@@ -1,9 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<color name="color_geriatrico" >#E09F7D</color>
-	<color name="color_fisiologico">#0575BF</color>
-	<color name="color_psicologico">#BE5DDA</color>
-	<color name="color_nutricional">#57E07E</color>
+	<color name="color_geriatrico" >#f9b492</color>
+	<color name="color_fisiologico">#05aaff</color>
+	<color name="color_psicologico">#df6aff</color>
+	<color name="color_nutricional">#58eb88</color>
+
+	<!-- NavigationView Menu Colors -->
+	<color name="window_background">#FFF5F5F5</color>
+	<color name="primaryColor">#346D7D</color>
+	<color name="primaryDarkColor">#1F515F</color>
+	<color name="accentColor">#03A9F4</color>
 </resources>
 
 

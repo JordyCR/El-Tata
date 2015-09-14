@@ -42,7 +42,7 @@ public class MainActivity extends Activity implements OnClickListener {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
+		setContentView(R.layout.activity_registrar_aplicacion);
 
 		ButterKnife.bind(this);
 		ActiveAndroid.initialize(this);

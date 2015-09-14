@@ -124,7 +124,7 @@ public class GcmMessageHandler extends IntentService {
 								.setSmallIcon(R.drawable.ic_mini_doctor)
 								.setLargeIcon((((BitmapDrawable) getResources().getDrawable(R.mipmap.ic_launcher)).getBitmap()))
 								// TODO: Cambiar estos 2 despues
-								.setContentTitle("Nuevo ReporteModel Médico.")
+								.setContentTitle("Nuevo Reporte Médico.")
 								.setContentText("El paciente " + extras.getString("paciente") +
 										", tiene un nuevo reporte del médico " + extras.getString("doctor"))
 								//.setContentInfo("4")
@@ -132,7 +132,7 @@ public class GcmMessageHandler extends IntentService {
 								.setAutoCancel(true)
 								.setDefaults(Notification.DEFAULT_ALL)
 								.setPriority(NotificationCompat.PRIORITY_HIGH)
-								.setTicker("Nuevo ReporteModel Médico.");
+								.setTicker("Nuevo Reporte Médico.");
 
 
 

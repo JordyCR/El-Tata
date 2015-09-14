@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+	<group android:checkableBehavior="single">
+		<item
+			android:id="@+id/nav_todos_reportes"
+			android:checked="true"
+			android:icon="@drawable/ic_file_document"
+			android:title="@string/str_todos_reportes" />
+		<item
+			android:id="@+id/nav_psicologicos"
+			android:icon="@drawable/ic_psicologico"
+			android:title="@string/str_psicologicos" />
+		<item
+			android:id="@+id/nav_nutricionales"
+			android:icon="@drawable/ic_nutriologico"
+			android:title="@string/str_nutriologicos" />
+		<item
+			android:id="@+id/nav_geriatricos"
+			android:icon="@drawable/ic_geriatrico"
+			android:title="@string/str_geriatricos" />
+		<item
+			android:id="@+id/nav_fisioterapicos"
+			android:icon="@drawable/ic_fisioterapeutico"
+			android:title="@string/str_fisioterapeuticos" />
+
+		<!--
+		android:icon="@drawable/ic_home"
+		android:icon="@drawable/ic_store"
+		android:icon="@drawable/ic_shopping_cart"
+		android:icon="@drawable/ic_truck"
+		android:icon="@drawable/ic_file_document" -->
+
+
+		<!-- Sección de configuración -->
+		<item
+			android:id="@+id/configuration_section"
+			android:title="@string/configuracion_item">
+			<menu>
+				<item
+					android:id="@+id/nav_log_out"
+					android:icon="@android:drawable/ic_lock_power_off"
+					android:title="@string/log_out_item" />
+			</menu>
+		</item>
+	</group>
+
+</menu>
