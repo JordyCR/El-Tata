@@ -13,8 +13,8 @@ import java.util.List;
  */
 @Table(name = "Pacientes")
 public class PacienteModel extends Model{
-	//@Column(name = "_id", unique = true, onUniqueConflict = Column.ConflictAction.IGNORE)
-	//public long _id;
+	@Column(name = "_id", unique = true, onUniqueConflict = Column.ConflictAction.REPLACE)
+	public long _id;
 
 	@Column(name = "nombre")
 	public String nombre;
@@ -30,7 +30,8 @@ public class PacienteModel extends Model{
 
 	public PacienteModel() { super(); }
 
-	public PacienteModel(String nombre, String apPat, String apMat, int edad) {
+	public PacienteModel(long id, String nombre, String apPat, String apMat, int edad) {
+		this._id = id;
 		this.nombre = nombre;
 		this.apPat = apPat;
 		this.apMat = apMat;
@@ -46,7 +47,7 @@ public class PacienteModel extends Model{
 
 
 
-		public static List<PacienteModel> getAll() {
+	public static List<PacienteModel> getAll() {
 		return new Select().from(PacienteModel.class).orderBy("apellidoPaterno ASC").execute();
 	}
 

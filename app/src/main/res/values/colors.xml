@@ -5,6 +5,26 @@
 	<color name="color_psicologico">#df6aff</color>
 	<color name="color_nutricional">#58eb88</color>
 
+	<color name="barra_geriatrico" >#795548</color>
+	<color name="barra_fisiologico">#2196f3</color>
+	<color name="barra_psicologico">#9c27b0</color>
+	<color name="barra_nutricional">#4caf50</color>
+
+	<color name="barra_dark_geriatrico" >#5d4037</color>
+	<color name="barra_dark_fisiologico">#1976d2</color>
+	<color name="barra_dark_psicologico">#7b1fa2</color>
+	<color name="barra_dark_nutricional">#388e3c</color>
+
+	<color name="listitem_geriatrico" >#bcaaa4</color>
+	<color name="listitem_fisiologico">#90caf9</color>
+	<color name="listitem_psicologico">#ce93d8</color>
+	<color name="listitem_nutricional">#a5d6a7</color>
+
+	<color name="background_geriatrico" >#d7ccc8</color>
+	<color name="background_fisiologico">#bbdefb</color>
+	<color name="background_psicologico">#e1bee7</color>
+	<color name="background_nutricional">#c8e6c9</color>
+
 	<!-- NavigationView Menu Colors -->
 	<color name="window_background">#FFF5F5F5</color>
 	<color name="primaryColor">#346D7D</color>

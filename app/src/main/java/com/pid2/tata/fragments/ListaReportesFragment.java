@@ -7,12 +7,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
-import com.nhaarman.listviewanimations.appearance.simple.AlphaInAnimationAdapter;
+import com.nhaarman.listviewanimations.appearance.simple.SwingBottomInAnimationAdapter;
+import com.nhaarman.listviewanimations.appearance.simple.SwingRightInAnimationAdapter;
 import com.nhaarman.listviewanimations.itemmanipulation.DynamicListView;
 import com.pid2.tata.R;
+import com.pid2.tata.db.ReporteModel;
+import com.pid2.tata.ui.TataAdapter;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -48,6 +52,7 @@ public class ListaReportesFragment extends Fragment implements OnItemClickListen
 	DynamicListView mListView;
 
 
+
 	/***************
 	 * CONSTRUCTOR *
 	 ***************/
@@ -58,11 +63,14 @@ public class ListaReportesFragment extends Fragment implements OnItemClickListen
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 	                         Bundle savedInstanceState) {
+		// TODO: Intentar settear el Theme antes de este inflate
 		View view = inflater.inflate(R.layout.section_fragment, container, false);
 		ButterKnife.bind(this, view);
 
 		// Ubicar argumento en el text view de section_fragment.xml
 		String tipoReporte = getArguments().getString(ARG_TIPO_REPORTES_FRAGMENT);
+
+		//mToolbar.setBackgroundColor(R.color.barra_fisiologico);
 
 		return view;
 	}
@@ -72,10 +80,17 @@ public class ListaReportesFragment extends Fragment implements OnItemClickListen
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
-		ArrayAdapter adapter = ArrayAdapter.createFromResource(getActivity(), R.array.Planets, android.R.layout.simple_list_item_1);
-		AlphaInAnimationAdapter animationAdapter = new AlphaInAnimationAdapter(adapter);
-		animationAdapter.setAbsListView(mListView);
-		mListView.setAdapter(animationAdapter);
+		// TODO: Conseguir reportes del cursor de ActiveAndroid
+
+		// ArrayAdapter adapter = ArrayAdapter.createFromResource(getActivity(), R.array.Planets, android.R.layout.simple_list_item_1);
+
+		// TODO: Mal, se deben conseguir los reportes segun el tipo
+		BaseAdapter adapter = new TataAdapter(getActivity(), ReporteModel.getAll());
+		SwingBottomInAnimationAdapter bottomInAnimationAdapter =
+					new SwingBottomInAnimationAdapter(
+								new SwingRightInAnimationAdapter(adapter));
+		bottomInAnimationAdapter.setAbsListView(mListView);
+		mListView.setAdapter(bottomInAnimationAdapter);
 		mListView.setOnItemClickListener(this);
 	}
 

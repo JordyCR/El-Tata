@@ -12,7 +12,7 @@ import java.util.List;
  */
 @Table(name = "Reportes")
 public class ReporteModel extends Model {
-	@Column(name = "_id", unique = true, onUniqueConflict = Column.ConflictAction.IGNORE)
+	@Column(name = "_id", unique = true, onUniqueConflict = Column.ConflictAction.REPLACE)
 	public long _id;
 
 	@Column(name = "fecha")
@@ -29,8 +29,8 @@ public class ReporteModel extends Model {
 			onDelete = Column.ForeignKeyAction.CASCADE)
 	public PacienteModel paciente;
 
-
-	public ReporteModel() { super(); }
+	public ReporteModel() {
+	}
 
 	public ReporteModel(long _id, String fecha, String tipo, String contenido, PacienteModel paciente) {
 		this._id = _id;

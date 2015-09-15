@@ -15,4 +15,34 @@
 		<item name="android:windowBackground">@color/window_background</item>
 	</style>
 
+
+	<!-- Themes según el tipo de reporte -->
+	<style name="Theme.Fisiatricos" parent="Theme.AppCompat.Light.NoActionBar">
+		<item name="colorPrimary">@color/barra_fisiologico</item>
+		<item name="colorPrimaryDark">@color/barra_dark_fisiologico</item>
+
+		<item name="android:windowBackground">@color/background_fisiologico</item>
+	</style>
+
+	<style name="Theme.Geriatricos" parent="Theme.AppCompat.Light.NoActionBar">
+		<item name="colorPrimary">@color/barra_geriatrico</item>
+		<item name="colorPrimaryDark">@color/barra_dark_geriatrico</item>
+
+		<item name="android:windowBackground">@color/background_geriatrico</item>
+	</style>
+
+	<style name="Theme.Nutriologicos" parent="Theme.AppCompat.Light.NoActionBar">
+		<item name="colorPrimary">@color/barra_nutricional</item>
+		<item name="colorPrimaryDark">@color/barra_dark_nutricional</item>
+
+		<item name="android:windowBackground">@color/background_nutricional</item>
+	</style>
+
+	<style name="Theme.Psicologicos" parent="Theme.AppCompat.Light.NoActionBar">
+		<item name="colorPrimary">@color/barra_psicologico</item>
+		<item name="colorPrimaryDark">@color/barra_dark_psicologico</item>
+
+		<item name="android:windowBackground">@color/background_psicologico</item>
+	</style>
+
 </resources>

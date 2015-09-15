@@ -84,8 +84,8 @@ public class MainActivity extends Activity implements OnClickListener {
 	@OnClick(R.id.createModels)
 	public void crearTestModels() {
 		// 6 reportes, 2 pacientes
-		PacienteModel jordy = new PacienteModel("Jordy", "Cuan", "Robledo", 22);
-		PacienteModel dam = new PacienteModel("Damaris", "Jocabed", "Javalois", 24);
+		PacienteModel jordy = new PacienteModel(4, "Jordy", "Cuan", "Robledo", 22);
+		PacienteModel dam = new PacienteModel(8, "Damaris", "Jocabed", "Javalois", 24);
 		jordy.save();
 		dam.save();
 
@@ -105,7 +105,7 @@ public class MainActivity extends Activity implements OnClickListener {
 		// Mostrar todos los reportes
 		// Mostrar todos MIS reportes
 		// Mostrar un determinado paciente
-		// Mostrar un determinado reporte desde el paciente TODO: ???
+		// Mostrar un determinado reporte desde el paciente TODO: Aun no funcionan los Join's???
 		etRegId.setText("");
 		String which = "";
 
