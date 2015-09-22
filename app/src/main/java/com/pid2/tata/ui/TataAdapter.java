@@ -5,6 +5,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.pid2.tata.R;
@@ -65,6 +67,9 @@ public class TataAdapter extends BaseAdapter {
 		ReporteModel reporte = reportes.get(position);
 		holder.fecha.setText(reporte.fecha);
 		holder.contenido.setText(reporte.contenido);
+		holder.elemento.setBackgroundColor(view.getResources().getColor(reporte.tipo_color));
+
+		chooseColor(holder, reporte.tipo);
 
 		return view;
 	}
@@ -72,9 +77,28 @@ public class TataAdapter extends BaseAdapter {
 	static class ViewHolder {
 		@Bind(R.id.tv_fecha) TextView fecha;
 		@Bind(R.id.tv_contenido) TextView contenido;
+		@Bind(R.id.fondo_list_view) RelativeLayout elemento;
+		@Bind(R.id.gradient_derecha) ImageView rightGradient;
 
 		public ViewHolder(View view) {
 			ButterKnife.bind(this, view);
+		}
+	}
+
+	private void chooseColor(ViewHolder vh, String type) {
+		switch (type) {
+			case ElTataMainActivity.t_fisioterapicos:
+				vh.rightGradient.setImageResource(R.drawable.gradient_fisioterapico_derecha);
+				break;
+			case ElTataMainActivity.t_nutriologicos:
+				vh.rightGradient.setImageResource(R.drawable.gradient_nutriologico_derecha);
+				break;
+			case ElTataMainActivity.t_geriatricos:
+				vh.rightGradient.setImageResource(R.drawable.gradient_geriatrico_derecha);
+				break;
+			case ElTataMainActivity.t_psicologicos:
+				vh.rightGradient.setImageResource(R.drawable.gradient_psicologico_derecha);
+				break;
 		}
 	}
 }

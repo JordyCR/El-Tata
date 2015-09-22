@@ -4,6 +4,8 @@ import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 import com.activeandroid.query.Select;
+import com.pid2.tata.R;
+import com.pid2.tata.ui.ElTataMainActivity;
 
 import java.util.List;
 
@@ -20,6 +22,9 @@ public class ReporteModel extends Model {
 
 	@Column(name = "tipo")
 	public String tipo;
+
+	@Column(name = "tipo_color")
+	public int tipo_color;
 
 	@Column(name = "contenido")
 	public String contenido;
@@ -38,6 +43,25 @@ public class ReporteModel extends Model {
 		this.tipo = tipo;
 		this.contenido = contenido;
 		this.paciente = paciente;
+
+		selectType(tipo);
+	}
+
+	private void selectType(String type) {
+		switch (type) {
+			case ElTataMainActivity.t_fisioterapicos:
+				tipo_color = R.color.listitem_fisiologico;
+				break;
+			case ElTataMainActivity.t_geriatricos:
+				tipo_color = R.color.listitem_geriatrico;
+				break;
+			case ElTataMainActivity.t_nutriologicos:
+				tipo_color = R.color.listitem_nutricional;
+				break;
+			case ElTataMainActivity.t_psicologicos:
+				tipo_color = R.color.listitem_psicologico;
+				break;
+		}
 	}
 
 	public static List<ReporteModel> getAll() {

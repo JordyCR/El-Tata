@@ -1,7 +1,6 @@
 package com.pid2.tata.ui;
 
 import android.annotation.TargetApi;
-import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -14,7 +13,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -33,12 +31,13 @@ public class ElTataMainActivity extends AppCompatActivity {
 	/**
 	 * Instancia del drawer
 	 */
+	@Bind(R.id.drawer_layout)
 	DrawerLayout drawerLayout;
 
 	/**
 	 * Titulo inicial del drawer
 	 */
-	private String drawerTitle;
+	String drawerTitle;
 
 	/**
 	 * Bandera Global para conocer el estado de la aplicación
@@ -52,21 +51,30 @@ public class ElTataMainActivity extends AppCompatActivity {
 	public static String geriatricos;
 	public static String fisioterapicos;
 
+	/** Data - Tipo */
+	public static final String t_psicologicos = "psicologico";
+	public static final String t_nutriologicos = "nutricional";
+	public static final String t_geriatricos = "geriatrico";
+	public static final String t_fisioterapicos = "fisioterapia";
+
+
 	@Bind(R.id.toolbar)
 	Toolbar mToolbar;
 
+	@Bind((R.id.nav_view))
+	NavigationView navigationView;
 
-	@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+
+	//@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_el_tata_main);
+
 		ButterKnife.bind(this);
 
 		setToolbar(); // Setear Toolbar como action bar
 
-		drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-		NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
 		if (navigationView != null) {
 			setupDrawerContent(navigationView);
 		}
@@ -76,23 +84,33 @@ public class ElTataMainActivity extends AppCompatActivity {
 			selectItem(drawerTitle);
 		}
 
-		View headerFondo = findViewById(R.id.header_view);
-		Random rn = new Random();
-		final int sdk = android.os.Build.VERSION.SDK_INT;
-		int ran = rn.nextInt(2);
-		int imgFondo = R.drawable.material_background2;
-		if (ran == 1) imgFondo = R.drawable.material_background3;
-		headerFondo.setBackground(ContextCompat.getDrawable(this, imgFondo)); // Esta linea hace lo anterior
+		setMaterialBackgroundToHeaderView();
+		setNavigationBarTranslucent();
 
-		this.todos_los_reportes = getString(R.string.str_todos_reportes);
-		this.psicologicos = getString(R.string.str_psicologicos);
-		this.nutriologicos = getString(R.string.str_nutriologicos);
-		this.geriatricos = getString(R.string.str_geriatricos);
-		this.fisioterapicos = getString(R.string.str_fisioterapeuticos);
+		todos_los_reportes = getString(R.string.str_todos_reportes);
+		psicologicos = getString(R.string.str_psicologicos);
+		nutriologicos = getString(R.string.str_nutriologicos);
+		geriatricos = getString(R.string.str_geriatricos);
+		fisioterapicos = getString(R.string.str_fisioterapeuticos);
 
 		// TODO: Borrar esto despues
 		// Dummy insertion
 		creaModelos();
+	}
+
+	@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+	private void setMaterialBackgroundToHeaderView() {
+		View headerFondo = findViewById(R.id.header_view);
+		Random rn = new Random();
+		int ran = rn.nextInt(2);
+		int imgFondo = R.drawable.material_background2;
+		if (ran == 1) imgFondo = R.drawable.material_background3;
+		headerFondo.setBackground(ContextCompat.getDrawable(this, imgFondo));
+	}
+
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
+	private void setNavigationBarTranslucent() {
+		getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
 	}
 
 	private void setToolbar() {
@@ -105,9 +123,9 @@ public class ElTataMainActivity extends AppCompatActivity {
 			ab.setHomeAsUpIndicator(R.drawable.ic_menu);
 			ab.setDisplayHomeAsUpEnabled(true);
 
-			// TODO: Quitar
+			// TODO: No me gusta que esté aqui
 			ab.setBackgroundDrawable(new ColorDrawable(
-					Color.parseColor("#2196f3")));
+					getResources().getColor(R.color.barra_fisiologico)));
 		}
 	}
 
@@ -148,6 +166,8 @@ public class ElTataMainActivity extends AppCompatActivity {
 	}
 
 	private void selectItem(String title) {
+		changeTheme(title);
+
 		// Enviar título como arguemento del fragmento
 		Bundle args = new Bundle();
 		args.putString(ListaReportesFragment.ARG_TIPO_REPORTES_FRAGMENT, title);
@@ -164,37 +184,56 @@ public class ElTataMainActivity extends AppCompatActivity {
 
 		// TODO: Setear título actual del TOOLBAR
 		super.setTitle(title);
-
-		cambiarTheme(title);
-		// super.setTheme();
 	}
 
 
-	// @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-	// TODO: No sirve
-	public void cambiarTheme(String title) {
-		if (title.equals(this.todos_los_reportes)) {
-			// setTheme(R.style.Theme_Fisiatricos);
-			getSupportActionBar().setBackgroundDrawable(new ColorDrawable(
-					Color.parseColor("#2196f3")));
-		} else if (title.equals(this.psicologicos)) {
-			// setTheme(R.style.Theme_Psicologicos);
-			getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor(
-					"#9c27b0")));
+	/**
+	 * Sets Theme depending on the report type that the user is visualizing
+	 * (It depends on the device version)
+	 * @param title The selected type of report
+	 */
+	@TargetApi(Build.VERSION_CODES.LOLLIPOP)
+	public void changeTheme(String title) {
+		ActionBar ab = getSupportActionBar();
+
+		// DEFAULT: Todos los Reportes (Inicialización)
+		int mBarColor = R.color.barra_fisiologico;
+		int mBarColorDark = R.color.barra_dark_fisiologico;
+		int mBackgroundColor = R.color.background_fisiologico;
+		int mListItemColor = R.color.listitem_fisiologico;
+
+		if (title.equals(this.psicologicos)) {
+			mBarColor = R.color.barra_psicologico;
+			mBarColorDark = R.color.barra_dark_psicologico;
+			mBackgroundColor = R.color.background_psicologico;
+			mListItemColor = R.color.listitem_psicologico;
 		} else if (title.equals(this.nutriologicos)) {
-			// setTheme(R.style.Theme_Nutriologicos);
-			getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor(
-					"#4caf50")));
+			mBarColor = R.color.barra_nutricional;
+			mBarColorDark = R.color.barra_dark_nutricional;
+			mBackgroundColor = R.color.background_nutricional;
+			mListItemColor = R.color.listitem_nutricional;
 		} else if (title.equals(this.geriatricos)) {
-			// setTheme(R.style.Theme_Geriatricos);
-			getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor(
-					"#795548")));
+			mBarColor = R.color.barra_geriatrico;
+			mBarColorDark = R.color.barra_dark_geriatrico;
+			mBackgroundColor = R.color.background_geriatrico;
+			mListItemColor = R.color.listitem_geriatrico;
 		} else if (title.equals(this.fisioterapicos)) {
-			// setTheme(R.style.Theme_Fisiatricos);
-			getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor(
-					"#2196f3")));
+			// This condition is unnecessary but I gonna let it here just for clarity
+			mBarColor = R.color.barra_fisiologico;
+			mBarColorDark = R.color.barra_dark_fisiologico;
+			mBackgroundColor = R.color.background_fisiologico;
+			mListItemColor = R.color.listitem_fisiologico;
 		}
-		// recreate(); // Todo: Añadir comparación de la versión actual para dar compatibilidad
+
+		ab.setBackgroundDrawable(new ColorDrawable(getResources().getColor(mBarColor)));
+		getWindow().setBackgroundDrawableResource(mBackgroundColor);
+		navigationView.setBackgroundColor(getResources().getColor(mBackgroundColor));
+
+		final int sdk = android.os.Build.VERSION.SDK_INT;
+		if (sdk < Build.VERSION_CODES.LOLLIPOP)
+			return;
+
+		getWindow().setStatusBarColor(getResources().getColor(mBarColorDark));
 	}
 
 
@@ -223,12 +262,11 @@ public class ElTataMainActivity extends AppCompatActivity {
 		jordy.save();
 
 
-		new ReporteModel(1, "Hoy", "Nutrición", "El paciente se encuentra bastante bien", jordy).save();
-		new ReporteModel(2, "16 de Marzo", "Fisiátrico", "Se han presentado mejoras en su caso", jordy).save();
-		new ReporteModel(3, "En 1993", "Nutrición", "Al parecer esta decayendo, se sugiere se le visite", jordy).save();
+		new ReporteModel(2, "Hoy", t_fisioterapicos, "Este es el contenido del fisiote rapeutico", jordy).save();
+		new ReporteModel(3, "En 1993", t_psicologicos, "PSI: Al parecer esta decayendo, se sugiere se le visite", jordy).save();
 
-		new ReporteModel(4, "Mañana", "Psicologico", "El paciente intentó suicidarse", jordy).save();
-		new ReporteModel(5, "31", "Geriátrico", "Se ha presentado una mejora en su estado", jordy).save();
-		new ReporteModel(6, "19 de Dic", "Psicologico", "Se ha dado de alta", jordy).save();
+		new ReporteModel(4, "Mañana", t_nutriologicos, "El paciente ha dejado de comer", jordy).save();
+		new ReporteModel(5, "31", t_geriatricos, "Se ha presentado una mejora en su estado fisico", jordy).save();
+		new ReporteModel(6, "19 de Dic", t_psicologicos, "Otro psicologico", jordy).save();
 	}
 }

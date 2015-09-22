@@ -67,5 +67,6 @@
   Themes
     http://stackoverflow.com/questions/2482848/how-to-change-current-theme-at-runtime-in-android
     http://www.google.com/design/spec/style/color.html#color-color-palette
+    http://stackoverflow.com/questions/22192291/how-to-change-the-status-bar-color-in-android
 
   guides.codepath.com/android

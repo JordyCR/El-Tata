@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
-                android:layout_height="?android:attr/listPreferredItemHeight"
+                android:layout_height="wrap_content"
                 android:id="@+id/fondo_list_view"
 				android:background="@color/listitem_fisiologico">
 
@@ -36,7 +36,8 @@
 		android:layout_toRightOf="@+id/ic_fecha"
 		android:layout_alignParentRight="true"
 		android:layout_alignParentEnd="true"
-		android:maxLength="40"/>
+		android:maxLength="38"
+		android:maxLines="1"/>
 
 	<ImageView
 		android:layout_width="match_parent"
@@ -45,15 +46,15 @@
 		android:layout_alignParentBottom="true"
 		android:layout_alignParentLeft="true"
 		android:layout_alignParentStart="true"
+		android:visibility="gone"
 		android:id="@+id/gradient_abajo"/>
 
 	<ImageView
-		android:layout_width="100dp"
+		android:layout_width="150dp"
 		android:layout_height="?android:attr/listPreferredItemHeight"
 		android:id="@+id/gradient_derecha"
-		android:src="@drawable/gradient_fisioterapico_derecha"
-		android:layout_alignParentTop="true"
-		android:layout_alignParentRight="true"
-		android:layout_alignParentEnd="true"/>
+		android:layout_alignTop="@+id/tv_fecha"
+		android:layout_alignRight="@+id/tv_contenido"
+		android:layout_alignEnd="@+id/tv_contenido"/>
 
 </RelativeLayout>

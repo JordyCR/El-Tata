@@ -6,9 +6,9 @@
 	<!-- NavigationView Menu Items -->
 	<string name="str_todos_reportes">Todos los Reportes</string>
 	<string name="str_psicologicos">Psicológicos</string>
-	<string name="str_nutriologicos">Nutrilógicos</string>
+	<string name="str_nutriologicos">Nutricional</string>
 	<string name="str_geriatricos">Geriátricos</string>
-	<string name="str_fisioterapeuticos">Fisioterápicos</string>
+	<string name="str_fisioterapeuticos">Fisioterapia</string>
 
 	<string name="log_out_item">Cerrar Sesión</string>
 	<string name="configuracion_item">Configuración</string>
