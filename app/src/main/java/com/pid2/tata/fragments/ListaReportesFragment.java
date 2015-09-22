@@ -16,7 +16,10 @@ import com.nhaarman.listviewanimations.appearance.simple.SwingRightInAnimationAd
 import com.nhaarman.listviewanimations.itemmanipulation.DynamicListView;
 import com.pid2.tata.R;
 import com.pid2.tata.db.ReporteModel;
+import com.pid2.tata.ui.ElTataMainActivity;
 import com.pid2.tata.ui.TataAdapter;
+
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -52,6 +55,8 @@ public class ListaReportesFragment extends Fragment implements OnItemClickListen
 	DynamicListView mListView;
 
 
+	private String reportType;
+
 
 	/***************
 	 * CONSTRUCTOR *
@@ -67,8 +72,7 @@ public class ListaReportesFragment extends Fragment implements OnItemClickListen
 		View view = inflater.inflate(R.layout.section_fragment, container, false);
 		ButterKnife.bind(this, view);
 
-		// Ubicar argumento en el text view de section_fragment.xml
-		String tipoReporte = getArguments().getString(ARG_TIPO_REPORTES_FRAGMENT);
+		reportType = getArguments().getString(ARG_TIPO_REPORTES_FRAGMENT);
 
 		//mToolbar.setBackgroundColor(R.color.barra_fisiologico);
 
@@ -85,13 +89,28 @@ public class ListaReportesFragment extends Fragment implements OnItemClickListen
 		// ArrayAdapter adapter = ArrayAdapter.createFromResource(getActivity(), R.array.Planets, android.R.layout.simple_list_item_1);
 
 		// TODO: Mal, se deben conseguir los reportes segun el tipo
-		BaseAdapter adapter = new TataAdapter(getActivity(), ReporteModel.getAll());
+		List<ReporteModel> reports = selectReports();
+		BaseAdapter adapter = new TataAdapter(getActivity(), reports);
 		SwingBottomInAnimationAdapter bottomInAnimationAdapter =
 					new SwingBottomInAnimationAdapter(
 								new SwingRightInAnimationAdapter(adapter));
 		bottomInAnimationAdapter.setAbsListView(mListView);
 		mListView.setAdapter(bottomInAnimationAdapter);
 		mListView.setOnItemClickListener(this);
+	}
+
+
+	private List<ReporteModel> selectReports() {
+		if(reportType.equals(ElTataMainActivity.fisioterapicos))
+			return ReporteModel.getReportsFromType(ElTataMainActivity.t_fisioterapicos);
+		if (reportType.equals(ElTataMainActivity.nutriologicos))
+			return ReporteModel.getReportsFromType(ElTataMainActivity.t_nutriologicos);
+		if (reportType.equals(ElTataMainActivity.geriatricos))
+			return ReporteModel.getReportsFromType(ElTataMainActivity.t_geriatricos);
+		if (reportType.equals(ElTataMainActivity.psicologicos))
+			return ReporteModel.getReportsFromType(ElTataMainActivity.t_psicologicos);
+		// If is nothing from above then is "todos_los_reportes"
+		return ReporteModel.getAll();
 	}
 
 

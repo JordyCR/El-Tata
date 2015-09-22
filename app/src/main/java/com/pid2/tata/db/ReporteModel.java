@@ -68,6 +68,13 @@ public class ReporteModel extends Model {
 		return new Select().from(ReporteModel.class).orderBy("_id ASC").execute(); // TODO: definir orden
 	}
 
+	public static List<ReporteModel> getReportsFromType(String type) {
+		return new Select()
+				.from(ReporteModel.class)
+				.where("tipo = ?", type)
+				.orderBy("_id ASC").execute(); // TODO: definir orden
+	}
+
 	@Override
 	public String toString() {
 		return "ReporteModel{" +
