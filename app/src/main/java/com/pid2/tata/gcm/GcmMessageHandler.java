@@ -11,12 +11,13 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
-import com.pid2.tata.MainActivity;
 import com.pid2.tata.R;
+import com.pid2.tata.db.ReporteModel;
+import com.pid2.tata.db.ReporteModel.Reports;
 import com.pid2.tata.ui.DetallesReporteActivity;
+import com.pid2.tata.ui.ElTataMainActivity;
 
 /**
  * Created by JordyCuan on 19/08/15.
@@ -42,26 +43,12 @@ public class GcmMessageHandler extends IntentService {
 		 * tabla hash y se recuperan los parametros mediante las llaves definidas por nosotros
 		 *
 		 * Este es el cuerpo del mensaje enviado al servidor de GCM
-
-		 {
-		    "data": {
-		        "fecha": "19/Ago/15",
-		        "doctor": "Max Cantorán Aguirre",
-		        "paciente": "Ismael Castillo",
-		        "comentarios": "Desafortunadamente el paciente se encuentra en estado terminal"
-		    },
-		    "registration_ids":
-		        ["APA91bHDXfzISMoo6OfqhhODnU7TeNzqCxeE7lYZHhdI801wazh1e7vbITZVTqwKU5avNW0myInlZW3Aat3S8gzqawN9G5fQEkMVNvqkDHRRYt1IDsFrPuc"]
-		 }
-
-		intent.getExtras().get("mLlave");  // Devuelve 'Object'
-		*/
-
+		 */
 		Bundle extras = intent.getExtras();
 
 
-
-		// TODO: De aquí en adelante se procesan los datos enviados. Es recomentable usar una DB
+		// Inserting to the DB
+		saveReport(extras);
 
 
 
@@ -73,14 +60,6 @@ public class GcmMessageHandler extends IntentService {
 		String messageType = gcm.getMessageType(intent);
 
 
-		// TODO: Usadas?
-		String fecha = extras.getString("fecha");
-		String doctor = extras.getString("doctor");
-		String paciente = extras.getString("paciente");
-		String comentarios = extras.getString("comentarios");
-		String tipo_rep = extras.getString("tipo");
-
-		// Todo: esta sí
 		int id_rep = Integer.valueOf(extras.getString("id"));
 
 		Log.i("*** GCM ***", String.valueOf(id_rep));
@@ -96,8 +75,31 @@ public class GcmMessageHandler extends IntentService {
 		// Como nosotros no lo procesamos aquí, lo mandamos a las notificaciones y a la
 		// actividad principal (aunque lo ideal sería aprovechar este otro hilo para
 		// meterlo dentro de una DB).
-		mostrarNotificacion(extras);
-//		Log.i("*** GCM ***", "Received : (" + messageType + ")  " + extras.getString("title"));
+		if (!ElTataMainActivity.isOpen)
+			mostrarNotificacion(extras);
+		else if (ElTataMainActivity.mMainInstance != null)
+			if (ElTataMainActivity.mMainInstance.actualFragment != null)
+				handler.post(
+						new Runnable() {
+							@Override
+							public void run() {
+								Log.d("** GcmMessageHandler **", "Aplicación Abierta -> Insertar en ListView");
+								Log.d("** GcmMessageHandler **", "" +
+										ReporteModel
+												.getReportsFromType(ElTataMainActivity.t_psicologicos)
+												.toString());
+								Log.d("** GcmMessageHandler **", "" +
+										Reports.Psychological
+												.getReportsFromType(ElTataMainActivity.t_psicologicos)
+												.toString());
+								;
+//								ElTataMainActivity
+//										.mMainInstance
+//										.actualFragment
+//										.mListView.insert(0,null);
+							} // TODO: Checar cuidadosamente toda esta logica
+						}
+				);
 
 		//TODO: Enviar acose de recibo al servidor
 		new Thread(new Runnable() {
@@ -159,5 +161,77 @@ public class GcmMessageHandler extends IntentService {
 				mNotificationManager.notify(Integer.valueOf(extras.getString("id")), mBuilder.build());
 			}
 		});
+	}
+
+
+	private void saveReport(Bundle extras) {
+		String t = extras.getString("tipo");
+		// TODO: Validar que se haya enviado tipo y el id
+		// TODO: Buscar si es paciente o paciente_str
+		switch (t) {
+			case ElTataMainActivity.t_fisioterapicos:
+				//new Reports.Physiotherapy(
+				ReporteModel.newPhysiotherapyReport(
+						Long.parseLong(extras.getString("id")),
+						extras.getString("fecha"),
+						extras.getString("tipo"),
+						extras.getString("doctor"),
+						extras.getString("paciente"),
+						extras.getString("terapia_ocupacional"),
+						extras.getString("terapia_manual"),
+						extras.getString("masajes"),
+						extras.getString("evolucion"),
+						extras.getString("recomendaciones"),
+						false, false
+				).save();
+				break;
+			case ElTataMainActivity.t_nutriologicos:
+				//new Reports.Nutritional(
+				ReporteModel.newNutritionalReport(
+						Long.parseLong(extras.getString("id")),
+						extras.getString("fecha"),
+						extras.getString("tipo"),
+						extras.getString("doctor"),
+						extras.getString("paciente"),
+						extras.getString("observaciones"),
+						extras.getString("sugerencias"),
+						extras.getString("peso"),
+						extras.getString("talla"),
+						extras.getString("glucosa"),
+						extras.getString("presion"),
+						extras.getString("imc"),
+						extras.getString("est_apetito"),
+						false, false
+				).save();
+				break;
+			case ElTataMainActivity.t_geriatricos:
+				//new Reports.Geriatric(
+				ReporteModel.newGeriatricReport(
+						Long.parseLong(extras.getString("id")),
+						extras.getString("fecha"),
+						extras.getString("tipo"),
+						extras.getString("doctor"),
+						extras.getString("paciente"),
+						extras.getString("observaciones"),
+						extras.getString("sugerencias"),
+						extras.getString("tratamiento"),
+						false, false
+				).save();
+				break;
+			case ElTataMainActivity.t_psicologicos:
+				Log.d("** GcmMessageHandler **", "Insertando psicológico");
+				//new Reports.Psychological(
+				ReporteModel.newPsychologicalReport(
+						Long.parseLong(extras.getString("id")),
+						extras.getString("fecha"),
+						extras.getString("tipo"),
+						extras.getString("doctor"),
+						extras.getString("paciente"),
+						extras.getString("observaciones"),
+						extras.getString("sugerencias"),
+						false, false
+				).save();
+				break;
+		}
 	}
 }

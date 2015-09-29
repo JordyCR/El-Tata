@@ -22,4 +22,6 @@ public class GcmBroadcastReceiver extends WakefulBroadcastReceiver {
 		startWakefulService(context, (intent.setComponent(comp)));
 		setResultCode(Activity.RESULT_OK);
 	}
+
+	// TODO: Verificar en el arranque del dispositivo si es que este está registrado
 }

@@ -20,8 +20,10 @@ import android.view.View;
 import com.pid2.tata.R;
 import com.pid2.tata.db.PacienteModel;
 import com.pid2.tata.db.ReporteModel;
+import com.pid2.tata.db.ReporteModel.Reports;
 import com.pid2.tata.fragments.ListaReportesFragment;
 
+import java.util.Date;
 import java.util.Random;
 
 import butterknife.Bind;
@@ -65,11 +67,16 @@ public class ElTataMainActivity extends AppCompatActivity {
 	NavigationView navigationView;
 
 
+	public ListaReportesFragment actualFragment = null;
+	public static ElTataMainActivity mMainInstance = null;
+
+
 	//@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_el_tata_main);
+		mMainInstance = this;
 
 		ButterKnife.bind(this);
 
@@ -137,7 +144,7 @@ public class ElTataMainActivity extends AppCompatActivity {
 					public boolean onNavigationItemSelected(MenuItem menuItem) {
 						// Marcar item presionado
 						menuItem.setChecked(true);
-						// TODO: Crear nuevo fragmento
+						// Crear nuevo fragmento
 						String title = menuItem.getTitle().toString();
 						selectItem(title);
 						return true;
@@ -172,17 +179,17 @@ public class ElTataMainActivity extends AppCompatActivity {
 		Bundle args = new Bundle();
 		args.putString(ListaReportesFragment.ARG_TIPO_REPORTES_FRAGMENT, title);
 
-		Fragment fragment = ListaReportesFragment.newInstance(title);
-		fragment.setArguments(args);
+		actualFragment = ListaReportesFragment.newInstance(title);
+		actualFragment.setArguments(args);
 		FragmentManager fragmentManager = getSupportFragmentManager();
 		fragmentManager
 				.beginTransaction()
-				.replace(R.id.main_content, fragment) // TODO: Aqui se infla el layout del fragment
+				.replace(R.id.main_content, actualFragment) // Aqui se infla el layout del fragment
 				.commit();
 
 		drawerLayout.closeDrawers(); // Cerrar drawer
 
-		// TODO: Setear título actual del TOOLBAR
+		// Setear título actual del TOOLBAR
 		super.setTitle(title);
 	}
 
@@ -262,11 +269,53 @@ public class ElTataMainActivity extends AppCompatActivity {
 		jordy.save();
 
 
-		new ReporteModel(2, "Hoy", t_fisioterapicos, "Este es el contenido del fisiote rapeutico", jordy).save();
-		new ReporteModel(3, "En 1993", t_psicologicos, "PSI: Al parecer esta decayendo, se sugiere se le visite", jordy).save();
+		Date date = new Date();
+//		new Reports.Physiotherapy(2, String.valueOf(date.getTime()), t_fisioterapicos,
+//				"Dr Enrique", "Pac. Jordy", "Terapia ocupacional", "Terapia manual", "masajes",
+//				"evolucion", "recomendaciones",
+//				false, false).save();
+//		new Reports.Psychological(3, String.valueOf(date.getTime()), t_psicologicos, "Dr Enrique",
+//				"Pac. Jordy", "observaciones", "Sugerencias",
+//				false, false).save();
+//
+//
+//
+//
+//		new Reports.Nutritional(4, String.valueOf(date.getTime()), t_nutriologicos, "Dr. Enrique", "Pac. Jordy",
+//				"observaciones", String.valueOf(date.getTime()), "peso", "talla", "glucosa", "presion",
+//				"imc", "apetito",
+//				false, false).save();
+//		new Reports.Geriatric(5, String.valueOf(date.getTime()), t_geriatricos, "Dr Enrique", "Paciente", "observaciones",
+//				"sugerencias", "tratamiento",
+//				false, false).save();
+//		new Reports.Psychological(6, String.valueOf(date.getTime()), t_psicologicos, "Dr Enrique", "Pac. Jordy",
+//				"Observaciones", "Sugerencias",
+//				false, false).save();
 
-		new ReporteModel(4, "Mañana", t_nutriologicos, "El paciente ha dejado de comer", jordy).save();
-		new ReporteModel(5, "31", t_geriatricos, "Se ha presentado una mejora en su estado fisico", jordy).save();
-		new ReporteModel(6, "19 de Dic", t_psicologicos, "Otro psicologico", jordy).save();
+		ReporteModel.newPhysiotherapyReport
+				(2, String.valueOf(date.getTime()), t_fisioterapicos,
+				"Dr Enrique", "Pac. Jordy", "Terapia ocupacional", "Terapia manual", "masajes",
+				"evolucion", "recomendaciones",
+				false, false).save();
+		ReporteModel.newPsychologicalReport
+				(3, String.valueOf(date.getTime()), t_psicologicos, "Dr Enrique",
+				"Pac. Jordy", "observaciones", "Sugerencias",
+				false, false).save();
+
+
+
+
+		ReporteModel.newNutritionalReport
+				(4, String.valueOf(date.getTime()), t_nutriologicos, "Dr. Enrique", "Pac. Jordy",
+				"observaciones", String.valueOf(date.getTime()), "peso", "talla", "glucosa", "presion",
+				"imc", "apetito",
+				false, false).save();
+		ReporteModel.newGeriatricReport
+				(5, String.valueOf(date.getTime()), t_geriatricos, "Dr Enrique", "Paciente", "observaciones",
+				"sugerencias", "tratamiento",
+				false, false).save();
+		ReporteModel.newPsychologicalReport(6, String.valueOf(date.getTime()), t_psicologicos, "Dr Enrique", "Pac. Jordy",
+				"Observaciones", "Sugerencias",
+				false, false).save();
 	}
 }

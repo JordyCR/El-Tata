@@ -81,23 +81,6 @@ public class MainActivity extends Activity implements OnClickListener {
 		getRegId();
 	}
 
-	@OnClick(R.id.createModels)
-	public void crearTestModels() {
-		// 6 reportes, 2 pacientes
-		PacienteModel jordy = new PacienteModel(4, "Jordy", "Cuan", "Robledo", 22);
-		PacienteModel dam = new PacienteModel(8, "Damaris", "Jocabed", "Javalois", 24);
-		jordy.save();
-		dam.save();
-
-		new ReporteModel(1, "Hoy", "Nutricion", "Jordy: Hola", jordy).save();
-		new ReporteModel(2, "16 de Marzo", "Musica", "Jordy: Que onda", jordy).save();
-		new ReporteModel(3, "En 1993", "Computación", "Jordy: Aqui, programando", jordy).save();
-
-		new ReporteModel(4, "Mañana", "Nutricion", "Jeje", dam).save();
-		new ReporteModel(5, "31", "Dream", "En el concierto", dam).save();
-		new ReporteModel(6, "19 de Dic", "Viajes", "Voy a Sancris", dam).save();
-	}
-
 
 	@OnClick(R.id.showModels)
 	public void mostrarTestModels() {

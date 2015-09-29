@@ -61,4 +61,4 @@ public class PacienteModel extends Model{
 				'}';
 	}
 }
-// TODO: QUITAR PUBLIC
+// TODO: QUITAR PUBLIC, Aparte, necesitamos esta clase?

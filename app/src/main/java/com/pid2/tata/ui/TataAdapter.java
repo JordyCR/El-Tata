@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.nhaarman.listviewanimations.util.Insertable;
 import com.pid2.tata.R;
 import com.pid2.tata.db.ReporteModel;
 
@@ -20,7 +21,7 @@ import butterknife.ButterKnife;
 /**
  * Created by JordyCuan on 12/09/15.
  */
-public class TataAdapter extends BaseAdapter {
+public class TataAdapter extends BaseAdapter implements Insertable<ReporteModel>{
 	private List<ReporteModel> reportes;
 	private LayoutInflater inflater = null;
 
@@ -67,7 +68,9 @@ public class TataAdapter extends BaseAdapter {
 		ReporteModel reporte = reportes.get(position);
 		holder.fecha.setText(reporte.fecha);
 		holder.contenido.setText(reporte.contenido);
-		holder.elemento.setBackgroundColor(view.getResources().getColor(reporte.tipo_color));
+		view.getResources();
+		view.getResources().getColor(reporte.tipo_color);
+		holder.listItem.setBackgroundColor(view.getResources().getColor(reporte.tipo_color));
 
 		chooseColor(holder, reporte.tipo);
 
@@ -77,7 +80,7 @@ public class TataAdapter extends BaseAdapter {
 	static class ViewHolder {
 		@Bind(R.id.tv_fecha) TextView fecha;
 		@Bind(R.id.tv_contenido) TextView contenido;
-		@Bind(R.id.fondo_list_view) RelativeLayout elemento;
+		@Bind(R.id.fondo_list_view) RelativeLayout listItem;
 		@Bind(R.id.gradient_derecha) ImageView rightGradient;
 
 		public ViewHolder(View view) {
@@ -100,5 +103,10 @@ public class TataAdapter extends BaseAdapter {
 				vh.rightGradient.setImageResource(R.drawable.gradient_psicologico_derecha);
 				break;
 		}
+	}
+
+	@Override
+	public void add(int i, ReporteModel reporteModel) {
+		reportes.add(i, reporteModel);
 	}
 }

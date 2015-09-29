@@ -16,6 +16,7 @@ import com.nhaarman.listviewanimations.appearance.simple.SwingRightInAnimationAd
 import com.nhaarman.listviewanimations.itemmanipulation.DynamicListView;
 import com.pid2.tata.R;
 import com.pid2.tata.db.ReporteModel;
+import com.pid2.tata.db.ReporteModel.Reports;
 import com.pid2.tata.ui.ElTataMainActivity;
 import com.pid2.tata.ui.TataAdapter;
 
@@ -52,7 +53,7 @@ public class ListaReportesFragment extends Fragment implements OnItemClickListen
 
 
 	@Bind(R.id.dynamiclistview)
-	DynamicListView mListView;
+	public DynamicListView mListView;
 
 
 	private String reportType;
@@ -84,11 +85,11 @@ public class ListaReportesFragment extends Fragment implements OnItemClickListen
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
-		// TODO: Conseguir reportes del cursor de ActiveAndroid
+		// TODO: Conseguir reportes del cursor de ActiveAndroid???
 
 		// ArrayAdapter adapter = ArrayAdapter.createFromResource(getActivity(), R.array.Planets, android.R.layout.simple_list_item_1);
 
-		// TODO: Mal, se deben conseguir los reportes segun el tipo
+		// BIEN! Se deben conseguir los reportes segun el tipo
 		List<ReporteModel> reports = selectReports();
 		BaseAdapter adapter = new TataAdapter(getActivity(), reports);
 		SwingBottomInAnimationAdapter bottomInAnimationAdapter =
