@@ -11,11 +11,12 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
+import android.view.MenuItem;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.pid2.tata.R;
+import com.pid2.tata.TataUtils;
 import com.pid2.tata.db.ReporteModel;
-import com.pid2.tata.db.ReporteModel.Reports;
 import com.pid2.tata.ui.DetallesReporteActivity;
 import com.pid2.tata.ui.ElTataMainActivity;
 
@@ -48,7 +49,7 @@ public class GcmMessageHandler extends IntentService {
 
 
 		// Inserting to the DB
-		saveReport(extras);
+		final ReporteModel ourReport = saveReport(extras);
 
 
 
@@ -64,40 +65,49 @@ public class GcmMessageHandler extends IntentService {
 
 		Log.i("*** GCM ***", String.valueOf(id_rep));
 
-//		Set<String> llaves = extras.keySet();
-//		String which = "";
-//		for (String llave : llaves) {
-//			which += llave + ", ";
-//		}
-//
-//		Log.i("*** GCM ***", which);
 
 		// Como nosotros no lo procesamos aquí, lo mandamos a las notificaciones y a la
 		// actividad principal (aunque lo ideal sería aprovechar este otro hilo para
 		// meterlo dentro de una DB).
 		if (!ElTataMainActivity.isOpen)
-			mostrarNotificacion(extras);
+			mostrarNotificacion(ourReport);
 		else if (ElTataMainActivity.mMainInstance != null)
 			if (ElTataMainActivity.mMainInstance.actualFragment != null)
 				handler.post(
 						new Runnable() {
 							@Override
 							public void run() {
-								Log.d("** GcmMessageHandler **", "Aplicación Abierta -> Insertar en ListView");
-								Log.d("** GcmMessageHandler **", "" +
-										ReporteModel
-												.getReportsFromType(ElTataMainActivity.t_psicologicos)
-												.toString());
-								Log.d("** GcmMessageHandler **", "" +
-										Reports.Psychological
-												.getReportsFromType(ElTataMainActivity.t_psicologicos)
-												.toString());
-								;
-//								ElTataMainActivity
-//										.mMainInstance
-//										.actualFragment
-//										.mListView.insert(0,null);
-							} // TODO: Checar cuidadosamente toda esta logica
+								if (ourReport != null) {
+									// TODO:
+									ElTataMainActivity
+											.mMainInstance
+											.actualFragment
+											.mListView.insert(0, ourReport);
+
+									// NOTIFICACIONES
+									int selected = 0;
+									switch (ourReport.tipo) {
+										case TataUtils.t_psicologicos:
+											selected = 1;
+											break;
+										case TataUtils.t_nutriologicos:
+											selected = 2;
+											break;
+										case TataUtils.t_geriatricos:
+											selected = 3;
+											break;
+										case TataUtils.t_fisioterapicos:
+											selected = 4;
+											break;
+									}
+									MenuItem mItem = ElTataMainActivity
+											.mMainInstance
+											.navigationView
+											.getMenu()
+											.getItem(selected);
+									mItem.setTitle(mItem.getTitle().toString() + " - Nuevo(s)");
+								}
+							}
 						}
 				);
 
@@ -112,13 +122,14 @@ public class GcmMessageHandler extends IntentService {
 		GcmBroadcastReceiver.completeWakefulIntent(intent);
 	}
 
-	public void mostrarNotificacion(final Bundle extras) {
+
+	public void mostrarNotificacion(final ReporteModel report) {
 
 		// Intervenimos en el UI
 		handler.post(new Runnable() {
 			public void run() {
 
-				String text = "El paciente " + extras.getString("paciente") +	", tiene un nuevo reporte del médico " + extras.getString("doctor");
+				String text = "El paciente " + report.paciente_str + ", tiene un nuevo reporte del médico " + report.doctor;
 				NotificationCompat.BigTextStyle textStyle = new NotificationCompat.BigTextStyle().bigText(text);
 
 				NotificationCompat.Builder
@@ -127,8 +138,8 @@ public class GcmMessageHandler extends IntentService {
 								.setLargeIcon((((BitmapDrawable) getResources().getDrawable(R.mipmap.ic_launcher)).getBitmap()))
 								// TODO: Cambiar estos 2 despues
 								.setContentTitle("Nuevo Reporte Médico.")
-								.setContentText("El paciente " + extras.getString("paciente") +
-										", tiene un nuevo reporte del médico " + extras.getString("doctor"))
+								.setContentText("El paciente " + report.paciente_str +
+										", tiene un nuevo reporte del médico " + report.doctor)
 								//.setContentInfo("4")
 								.setStyle(textStyle)
 								.setAutoCancel(true)
@@ -141,8 +152,10 @@ public class GcmMessageHandler extends IntentService {
 				Intent intent = new Intent(getApplicationContext(), DetallesReporteActivity.class);
 				intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
-				// Como no empleamos (por ahora) los extras, los mandamos a la otra actividad
+				// Enviamos el reporte por medio de los extras a la otra actividad
 				// para su manipulación
+				Bundle extras = new Bundle();
+				extras.putSerializable("reporte", report);
 				intent.putExtras(extras);
 																										// Con esto, hacemos que el intent sea el MISMO
 				PendingIntent contIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -157,21 +170,22 @@ public class GcmMessageHandler extends IntentService {
 				NotificationManager mNotificationManager =
 						(NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
-				//final int NOTIF_ALERTA_ID = 123;  // Identificador único de nuestra notificación
-				mNotificationManager.notify(Integer.valueOf(extras.getString("id")), mBuilder.build());
+				// Identificador único de nuestra notificación
+				mNotificationManager.notify((int) report._id, mBuilder.build());
 			}
 		});
 	}
 
 
-	private void saveReport(Bundle extras) {
+	private ReporteModel saveReport(Bundle extras) {
 		String t = extras.getString("tipo");
+		ReporteModel newReport;
 		// TODO: Validar que se haya enviado tipo y el id
 		// TODO: Buscar si es paciente o paciente_str
 		switch (t) {
-			case ElTataMainActivity.t_fisioterapicos:
+			case TataUtils.t_fisioterapicos:
 				//new Reports.Physiotherapy(
-				ReporteModel.newPhysiotherapyReport(
+				newReport = ReporteModel.newPhysiotherapyReport(
 						Long.parseLong(extras.getString("id")),
 						extras.getString("fecha"),
 						extras.getString("tipo"),
@@ -183,11 +197,12 @@ public class GcmMessageHandler extends IntentService {
 						extras.getString("evolucion"),
 						extras.getString("recomendaciones"),
 						false, false
-				).save();
-				break;
-			case ElTataMainActivity.t_nutriologicos:
+				);
+				newReport.save();
+				return newReport;
+			case TataUtils.t_nutriologicos:
 				//new Reports.Nutritional(
-				ReporteModel.newNutritionalReport(
+				newReport = ReporteModel.newNutritionalReport(
 						Long.parseLong(extras.getString("id")),
 						extras.getString("fecha"),
 						extras.getString("tipo"),
@@ -202,11 +217,12 @@ public class GcmMessageHandler extends IntentService {
 						extras.getString("imc"),
 						extras.getString("est_apetito"),
 						false, false
-				).save();
-				break;
-			case ElTataMainActivity.t_geriatricos:
+				);
+				newReport.save();
+				return newReport;
+			case TataUtils.t_geriatricos:
 				//new Reports.Geriatric(
-				ReporteModel.newGeriatricReport(
+				newReport = ReporteModel.newGeriatricReport(
 						Long.parseLong(extras.getString("id")),
 						extras.getString("fecha"),
 						extras.getString("tipo"),
@@ -216,12 +232,13 @@ public class GcmMessageHandler extends IntentService {
 						extras.getString("sugerencias"),
 						extras.getString("tratamiento"),
 						false, false
-				).save();
-				break;
-			case ElTataMainActivity.t_psicologicos:
+				);
+				newReport.save();
+				return newReport;
+			case TataUtils.t_psicologicos:
 				Log.d("** GcmMessageHandler **", "Insertando psicológico");
 				//new Reports.Psychological(
-				ReporteModel.newPsychologicalReport(
+				newReport = ReporteModel.newPsychologicalReport(
 						Long.parseLong(extras.getString("id")),
 						extras.getString("fecha"),
 						extras.getString("tipo"),
@@ -230,8 +247,10 @@ public class GcmMessageHandler extends IntentService {
 						extras.getString("observaciones"),
 						extras.getString("sugerencias"),
 						false, false
-				).save();
-				break;
+				);
+				newReport.save();
+				return newReport;
 		}
+		return null;
 	}
 }

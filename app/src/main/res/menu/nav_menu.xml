@@ -32,7 +32,7 @@
 		android:icon="@drawable/ic_file_document" -->
 
 
-		<!-- Sección de configuración -->
+		<!-- Sección de configuración - - >
 		<item
 			android:id="@+id/configuration_section"
 			android:title="@string/configuracion_item">
@@ -43,6 +43,7 @@
 					android:title="@string/log_out_item" />
 			</menu>
 		</item>
+		-->
 	</group>
 
 </menu>

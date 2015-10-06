@@ -18,6 +18,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.pid2.tata.R;
+import com.pid2.tata.TataUtils;
 import com.pid2.tata.db.PacienteModel;
 import com.pid2.tata.db.ReporteModel;
 import com.pid2.tata.db.ReporteModel.Reports;
@@ -53,18 +54,13 @@ public class ElTataMainActivity extends AppCompatActivity {
 	public static String geriatricos;
 	public static String fisioterapicos;
 
-	/** Data - Tipo */
-	public static final String t_psicologicos = "psicologico";
-	public static final String t_nutriologicos = "nutricional";
-	public static final String t_geriatricos = "geriatrico";
-	public static final String t_fisioterapicos = "fisioterapia";
 
 
 	@Bind(R.id.toolbar)
 	Toolbar mToolbar;
 
 	@Bind((R.id.nav_view))
-	NavigationView navigationView;
+	public NavigationView navigationView;
 
 
 	public ListaReportesFragment actualFragment = null;
@@ -82,9 +78,9 @@ public class ElTataMainActivity extends AppCompatActivity {
 
 		setToolbar(); // Setear Toolbar como action bar
 
-		if (navigationView != null) {
+//		if (navigationView != null) {
 			setupDrawerContent(navigationView);
-		}
+//		}
 
 		drawerTitle = getResources().getString(R.string.str_todos_reportes);
 		if (savedInstanceState == null) {
@@ -102,7 +98,7 @@ public class ElTataMainActivity extends AppCompatActivity {
 
 		// TODO: Borrar esto despues
 		// Dummy insertion
-		creaModelos();
+		TataUtils.creaModelos();
 	}
 
 	@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
@@ -145,7 +141,8 @@ public class ElTataMainActivity extends AppCompatActivity {
 						// Marcar item presionado
 						menuItem.setChecked(true);
 						// Crear nuevo fragmento
-						String title = menuItem.getTitle().toString();
+						String title = menuItem.getTitle().toString().replaceAll(" - Nuevo\\(s\\)", "");
+						menuItem.setTitle(title);           //replaceAll usa RegEx y hay problemas con los ()
 						selectItem(title);
 						return true;
 					}
@@ -173,6 +170,9 @@ public class ElTataMainActivity extends AppCompatActivity {
 	}
 
 	private void selectItem(String title) {
+		// Setear título actual del TOOLBAR
+		super.setTitle(title);
+
 		changeTheme(title);
 
 		// Enviar título como arguemento del fragmento
@@ -188,9 +188,6 @@ public class ElTataMainActivity extends AppCompatActivity {
 				.commit();
 
 		drawerLayout.closeDrawers(); // Cerrar drawer
-
-		// Setear título actual del TOOLBAR
-		super.setTitle(title);
 	}
 
 
@@ -257,65 +254,5 @@ public class ElTataMainActivity extends AppCompatActivity {
 	protected void onPause() {
 		ElTataMainActivity.isOpen = false;
 		super.onPause();
-	}
-
-
-	/**
-	 * Modelos DUMMY
-	 */
-	private void creaModelos() {
-		// 6 reportes, 2 pacientes
-		PacienteModel jordy = new PacienteModel(4, "Jordy Joaquin", "Cuan", "Robledo", 22);
-		jordy.save();
-
-
-		Date date = new Date();
-//		new Reports.Physiotherapy(2, String.valueOf(date.getTime()), t_fisioterapicos,
-//				"Dr Enrique", "Pac. Jordy", "Terapia ocupacional", "Terapia manual", "masajes",
-//				"evolucion", "recomendaciones",
-//				false, false).save();
-//		new Reports.Psychological(3, String.valueOf(date.getTime()), t_psicologicos, "Dr Enrique",
-//				"Pac. Jordy", "observaciones", "Sugerencias",
-//				false, false).save();
-//
-//
-//
-//
-//		new Reports.Nutritional(4, String.valueOf(date.getTime()), t_nutriologicos, "Dr. Enrique", "Pac. Jordy",
-//				"observaciones", String.valueOf(date.getTime()), "peso", "talla", "glucosa", "presion",
-//				"imc", "apetito",
-//				false, false).save();
-//		new Reports.Geriatric(5, String.valueOf(date.getTime()), t_geriatricos, "Dr Enrique", "Paciente", "observaciones",
-//				"sugerencias", "tratamiento",
-//				false, false).save();
-//		new Reports.Psychological(6, String.valueOf(date.getTime()), t_psicologicos, "Dr Enrique", "Pac. Jordy",
-//				"Observaciones", "Sugerencias",
-//				false, false).save();
-
-		ReporteModel.newPhysiotherapyReport
-				(2, String.valueOf(date.getTime()), t_fisioterapicos,
-				"Dr Enrique", "Pac. Jordy", "Terapia ocupacional", "Terapia manual", "masajes",
-				"evolucion", "recomendaciones",
-				false, false).save();
-		ReporteModel.newPsychologicalReport
-				(3, String.valueOf(date.getTime()), t_psicologicos, "Dr Enrique",
-				"Pac. Jordy", "observaciones", "Sugerencias",
-				false, false).save();
-
-
-
-
-		ReporteModel.newNutritionalReport
-				(4, String.valueOf(date.getTime()), t_nutriologicos, "Dr. Enrique", "Pac. Jordy",
-				"observaciones", String.valueOf(date.getTime()), "peso", "talla", "glucosa", "presion",
-				"imc", "apetito",
-				false, false).save();
-		ReporteModel.newGeriatricReport
-				(5, String.valueOf(date.getTime()), t_geriatricos, "Dr Enrique", "Paciente", "observaciones",
-				"sugerencias", "tratamiento",
-				false, false).save();
-		ReporteModel.newPsychologicalReport(6, String.valueOf(date.getTime()), t_psicologicos, "Dr Enrique", "Pac. Jordy",
-				"Observaciones", "Sugerencias",
-				false, false).save();
 	}
 }

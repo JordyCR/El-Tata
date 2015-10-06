@@ -4,20 +4,20 @@ import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 import com.activeandroid.query.Select;
-import com.google.android.gms.games.internal.GamesContract;
 import com.pid2.tata.R;
+import com.pid2.tata.TataUtils;
 import com.pid2.tata.ui.ElTataMainActivity;
 
-import java.util.ArrayList;
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by JordyCuan on 06/09/15.
  */
 @Table(name = "Reportes")
-public class ReporteModel extends Model {
+public class ReporteModel extends Model implements Serializable {
 	/** ALL REPORTS */
-	@Column(name = "_id", unique = true, onUniqueConflict = Column.ConflictAction.REPLACE)
+	@Column(name = "_id", unique = true, onUniqueConflict = Column.ConflictAction.IGNORE)
 	public long _id;
 
 	/** ALL REPORTS */@Column(name = "fecha")
@@ -268,16 +268,16 @@ public class ReporteModel extends Model {
 
 	private void selectType(String type) {
 		switch (type) {
-			case ElTataMainActivity.t_fisioterapicos:
+			case TataUtils.t_fisioterapicos:
 				tipo_color = R.color.listitem_fisiologico;
 				break;
-			case ElTataMainActivity.t_geriatricos:
+			case TataUtils.t_geriatricos:
 				tipo_color = R.color.listitem_geriatrico;
 				break;
-			case ElTataMainActivity.t_nutriologicos:
+			case TataUtils.t_nutriologicos:
 				tipo_color = R.color.listitem_nutricional;
 				break;
-			case ElTataMainActivity.t_psicologicos:
+			case TataUtils.t_psicologicos:
 				tipo_color = R.color.listitem_psicologico;
 				break;
 		}
@@ -285,7 +285,7 @@ public class ReporteModel extends Model {
 
 
 	public static List<ReporteModel> getAll() {
-		return new Select().from(ReporteModel.class).orderBy("fecha ASC").execute(); // TODO: definir orden FECHA?
+		return new Select().from(ReporteModel.class).orderBy("fecha DESC").execute(); // TODO: definir orden FECHA?
 	}
 
 
